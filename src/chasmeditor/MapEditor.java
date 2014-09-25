@@ -646,11 +646,11 @@ public class MapEditor extends JPanel{
           }else if (key == KeyEvent.VK_RIGHT){
             x0+= 20;
           }else if (key == KeyEvent.VK_HOME){
-            setScale(1.0, true);
+            setScale(1.0);
           }else if (key == KeyEvent.VK_PAGE_UP){
-            setScale((double)(tw+1)/main.tileW, true);
+            setScale((double)(tw+1)/main.tileW);
           }else if (key == KeyEvent.VK_PAGE_DOWN){
-            if (tw > 0) setScale((double)(tw-1)/main.tileW, true);
+            if (tw > 0) setScale((double)(tw-1)/main.tileW);
           // flip all selection tiles horizontally
           }else if ((key == KeyEvent.VK_H) || (key == KeyEvent.VK_C)){
             if (layersPanel.selectAllBox.isSelected()){  // all layers
@@ -770,25 +770,29 @@ public class MapEditor extends JPanel{
       addMouseWheelListener(new MouseAdapter(){
         @Override public void mouseWheelMoved(MouseWheelEvent e){
           int i = tw-e.getWheelRotation();
-          setScale((double)((i > 0) ? i : 1)/main.tileW, true);
+          setScale((double)((i > 0) ? i : 1)/main.tileW);
         }
       });
     }
     
     void setView(int x, int y, double newScale){ 
-      x0 = x; y0 = y; setScale(1.0, false); 
+      setScale(newScale); x0 = x; y0 = y; 
     }
     
-    void setScale(double newScale, boolean scaleCentered){
+    void rescale(){
+      double x = (double)x0/tw, y = (double)y0/th;
+      setScale(scale);   
+      x0 = (int)Math.round(x*tw); y0 = (int)Math.round(y*th);
+    }
+    
+    void setScale(double newScale){
       int tw0 = tw, th0 = th;
       scale = newScale;
       tw = (int)(main.tileW*scale + 0.5);
       th = (int)(main.tileH*scale + 0.5);
       if (tw < 1) tw = 1; if (th < 1) th = 1;
-      if (scaleCentered){
-        x0 = (int)Math.round((x0 + w/2.0)*tw/tw0 - w/2.0);
-        y0 = (int)Math.round((y0 + h/2.0)*th/th0 - h/2.0);
-      }
+      x0 = (int)Math.round((x0 + w/2.0)*tw/tw0 - w/2.0);
+      y0 = (int)Math.round((y0 + h/2.0)*th/th0 - h/2.0);
     }
     
     void ensureInView(int i, int j){

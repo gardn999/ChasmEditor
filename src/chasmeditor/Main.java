@@ -170,7 +170,7 @@ public class Main extends JFrame implements ActionListener{
     fileSettings.tileHField.setValue(tileH);
     initBaseTilesFromImage();
     initPanels();
-    mapEditor.viewPanel.setScale(mapEditor.viewPanel.scale, false);
+    mapEditor.viewPanel.rescale();
   }
   
   // load mapFilePath map or reset if unable to
