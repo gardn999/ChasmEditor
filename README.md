@@ -1,13 +1,12 @@
-================================================================================
-about ChasmEditor
-================================================================================
+#Chasm Editor
 
-Author:  John Gardner
+**Author:  John Gardner**
 
 This is a Java based tile editor which was initially created for an RPG I am 
 currently developing called "The Chasm". Take a look at the game to get an idea 
 of what it is capable of: 
 http://gamejolt.com/games/rpg/the-chasm/17733/
+
 Here is a platformer game which I also created using it:
 http://gamejolt.com/games/platformer/regrowth/19175
 
@@ -26,7 +25,7 @@ SimpleTown:64x64.
 
 Take a look at dist/examples to see sample programs demonstrating how the 
 maps can be used in Java.  In order of complexity they are: ShowMap.jar, 
-BasicExample and Platformer.jar.  Take a look at their src files in the 
+BasicExample.jar and Platformer.jar.  Take a look at their src files in the 
 examples_src folder.
 
 ![Landscape](http://john-gardner.net/ChasmEditor/ChasmEditor.png)
