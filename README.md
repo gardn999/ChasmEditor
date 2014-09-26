@@ -1,10 +1,10 @@
-#Chasm Editor
+#Chasm Editor: a tile map editor for Java
 
 **Author:  John Gardner**
 
-This is a Java based tile editor which was initially created for an RPG I am 
-currently developing called "The Chasm". Take a look at the game to get an idea 
-of what it is capable of: 
+This is a Java based tile map editor which was initially created for an RPG I am 
+developing called "The Chasm". Take a look at the game to get an idea of what it 
+is capable of: 
 http://gamejolt.com/games/rpg/the-chasm/17733/
 
 Here is a platformer game which I also created using it:
@@ -14,7 +14,7 @@ Chasm editor supports multiple tile layers (soft limit of 100 set for now),
 multiple maps per file, collision detection, animated tiles, tile transparency 
 and tile flipping.  An autocompressing map format is used which eliminates the 
 need to specify a map size.  All maps automatically have 2^32 by 2^32 dimensions 
-and make use of tile repetition to greatly reduce storage requirements.
+and make use of repeated patterns to greatly reduce storage requirements.
 
 To try it out, unzip everything and run ChasmEditor.jar in the dist folder.  It
 should automatically load up an example map.  Load new map and image files in
