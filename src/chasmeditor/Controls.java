@@ -51,35 +51,36 @@ public class Controls extends JPanel{
     
     addSep(0);
     addLabel("Map Editor - Base/Composite Tiles Panels", 0);
-    addSep(8);
-    addLabel("             Select a Tile: LMB      ", 8);
-    addLabel("Swap Tile Usage Everywhere: Shift+LMB", 20);
+    addSep(5);
+    addLabel("             Select a Tile: LMB      ", 5);
+    addLabel("Swap Tile Usage Everywhere: Shift+LMB", 15);
     
     addSep(0);
     addLabel("Map Editor - Map View Panel", 0);
-    addSep(8);
-    addLabel("Select View For Map Edit Panel: LMB", 20);
+    addSep(5);
+    addLabel("Select View For Map Edit Panel: LMB", 15);
     
     addSep(0);
     addLabel("Map Editor - Map Layers Panel", 0);
-    addSep(8);
-    addLabel("Increase/Decrease Current Layer: D/E", 8);
-    addLabel("Toggle Draw All Selected Layers: A  ", 20);
+    addSep(5);
+    addLabel("Increase/Decrease Current Layer: D/E", 5);
+    addLabel("Toggle Draw All Visible Layers: A  ",  5);
+    addLabel("Toggle On/Off All Visible Layers: Z  ", 15);
     
     addSep(0);
     addLabel("Tile Editor - BaseTiles Panel", 0);
-    addSep(8);
+    addSep(5);
     addLabel("             Select a Tile: LMB      ", 0);
-    addLabel("Toggle Set/Clear All Solid: Shift+LMB", 20);
+    addLabel("Toggle Set/Clear All Solid: Shift+LMB", 15);
     
     addSep(0);
     addLabel("Tile Editor - BaseTile 4x4 Solid Map", 0);
-    addSep(8);
-    addLabel("Set/Clear Solid in 4x4 Map: LMB/RMB", 20);
+    addSep(5);
+    addLabel("Set/Clear Solid in 4x4 Map: LMB/RMB", 15);
     
     addSep(0);
     addLabel("Tile Editor - CompTiles Panel", 0);
-    addSep(8);
+    addSep(5);
     addLabel("Select a Tile: LMB      ", 0);
     addLabel("    Copy Tile: Shift+LMB", 0);
     

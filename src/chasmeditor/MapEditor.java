@@ -148,17 +148,41 @@ public class MapEditor extends JPanel{
     getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
          put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "nextLayer");
     
-    // toggle select all layers
-    Action selectAllAction = new AbstractAction(){
+    // toggle select all visible layers
+    Action selectAllVisibleAction = new AbstractAction(){
       @Override public void actionPerformed(ActionEvent e){
         mapTabbedPane.setSelectedIndex(1);
-        layersPanel.selectAllBox.setSelected(
-             !layersPanel.selectAllBox.isSelected());
+        layersPanel.selectAllVisibleBox.setSelected(
+             !layersPanel.selectAllVisibleBox.isSelected());
       }
     };
-    getActionMap().put("selectAllLayers", selectAllAction);
+    getActionMap().put("selectAllVisibleLayers", selectAllVisibleAction);
     getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
-         put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "selectAllLayers");
+         put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), 
+              "selectAllVisibleLayers");
+    
+    // toggle on/off all visible layers
+    Action toggleVisibleAction = new AbstractAction(){
+      @Override public void actionPerformed(ActionEvent e){
+        mapTabbedPane.setSelectedIndex(1);
+        boolean allVisible = true;
+        for (int i = 0; i < tileMap.totalLayers(); i++)
+          if (!layersPanel.visibleLayerBox[i].isSelected()){
+            allVisible = false; break;
+          }
+        if (allVisible){
+          for (int i = 0; i < tileMap.totalLayers(); i++) 
+            layersPanel.visibleLayerBox[i].setSelected(false);
+        }else{
+          for (int i = 0; i < tileMap.totalLayers(); i++) 
+            layersPanel.visibleLayerBox[i].setSelected(true);
+        }
+      }
+    };
+    getActionMap().put("toggleVisibleLayers", toggleVisibleAction);
+    getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).
+         put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), 
+              "toggleVisibleLayers");
   }
   
   void update(){
@@ -443,7 +467,7 @@ public class MapEditor extends JPanel{
   }
   
   class LayersPanel extends JPanel{
-    JCheckBox selectAllBox;
+    JCheckBox selectAllVisibleBox;
     JPanel innerPanel;
     JRadioButton[] currentLayerButton;
     ButtonGroup visibleRadioGroup;
@@ -454,11 +478,10 @@ public class MapEditor extends JPanel{
       setLayout(new BorderLayout());
       setMinimumSize(new Dimension(20, 20));
       
-      selectAllBox = new JCheckBox("Draw All Selected Layers");
-      selectAllBox.setHorizontalAlignment(SwingConstants.CENTER);
-      selectAllBox.setPreferredSize(new Dimension(60, 30));
-      selectAllBox.setSelected(true);
-      add(selectAllBox, BorderLayout.NORTH);
+      selectAllVisibleBox = new JCheckBox("Draw All Visible Layers");
+      selectAllVisibleBox.setHorizontalAlignment(SwingConstants.CENTER);
+      selectAllVisibleBox.setPreferredSize(new Dimension(60, 30));
+      add(selectAllVisibleBox, BorderLayout.NORTH);
       
       innerPanel = new JPanel();
       innerPanel.setLayout(new GridLayout(0, 4));
@@ -653,64 +676,34 @@ public class MapEditor extends JPanel{
             if (tw > 0) setScale((double)(tw-1)/main.tileW);
           // flip all selection tiles horizontally
           }else if ((key == KeyEvent.VK_H) || (key == KeyEvent.VK_C)){
-            if (layersPanel.selectAllBox.isSelected()){  // all layers
-              // flip each tile
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel; ii++)
-                  for (int layer = 0; layer < tileMap.totalLayers(); layer++)
-                    selectionTiles[ii + jj*wSel][layer]^= 1;
-              // flip selection
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel/2; ii++){
-                  int[] tmp = selectionTiles[ii + jj*wSel];
-                  selectionTiles[ii + jj*wSel] = 
-                       selectionTiles[wSel-1 - ii + jj*wSel];
-                  selectionTiles[wSel-1 - ii + jj*wSel] = tmp;
-                }
-            }else{ // only selected layer
-              // flip each tile
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel; ii++)
-                  selectionTiles[ii + jj*wSel][selectedLayer]^= 1;
-              // flip selection
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel/2; ii++){
-                  int tmp = selectionTiles[ii + jj*wSel][selectedLayer];
-                  selectionTiles[ii + jj*wSel][selectedLayer] = 
-                       selectionTiles[wSel-1 - ii + jj*wSel][selectedLayer];
-                  selectionTiles[wSel-1 - ii + jj*wSel][selectedLayer] = tmp;
-                }
-            }
+            // flip each tile
+            for (int jj = 0; jj < hSel; jj++)
+              for (int ii = 0; ii < wSel; ii++)
+                for (int layer = 0; layer < tileMap.totalLayers(); layer++)
+                  selectionTiles[ii + jj*wSel][layer]^= 1;
+            // flip selection
+            for (int jj = 0; jj < hSel; jj++)
+              for (int ii = 0; ii < wSel/2; ii++){
+                int[] tmp = selectionTiles[ii + jj*wSel];
+                selectionTiles[ii + jj*wSel] = 
+                     selectionTiles[wSel-1 - ii + jj*wSel];
+                selectionTiles[wSel-1 - ii + jj*wSel] = tmp;
+              }
           // flip all selection tiles vertically
           }else if (key == KeyEvent.VK_V){
-            if (layersPanel.selectAllBox.isSelected()){  // all layers
-              // flip each tile
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel; ii++)
-                  for (int layer = 0; layer < tileMap.totalLayers(); layer++)
-                    selectionTiles[ii + jj*wSel][layer]^= 2;
-              // flip selection
+            // flip each tile
+            for (int jj = 0; jj < hSel; jj++)
               for (int ii = 0; ii < wSel; ii++)
-                for (int jj = 0; jj < hSel/2; jj++){
-                  int[] tmp = selectionTiles[ii + jj*wSel];
-                  selectionTiles[ii + jj*wSel] = 
-                       selectionTiles[ii + (hSel-1 - jj)*wSel];
-                  selectionTiles[ii + (hSel-1 - jj)*wSel] = tmp;
-                }
-            }else{ // only selected layer
-              // flip each tile
-              for (int jj = 0; jj < hSel; jj++)
-                for (int ii = 0; ii < wSel; ii++)
-                  selectionTiles[ii + jj*wSel][selectedLayer]^= 2;
-              // flip selection
-              for (int ii = 0; ii < wSel; ii++)
-                for (int jj = 0; jj < hSel/2; jj++){
-                  int tmp = selectionTiles[ii + jj*wSel][selectedLayer];
-                  selectionTiles[ii + jj*wSel][selectedLayer] = 
-                       selectionTiles[ii + (hSel-1 - jj)*wSel][selectedLayer];
-                  selectionTiles[ii + (hSel-1 - jj)*wSel][selectedLayer] = tmp;
-                }
-            }
+                for (int layer = 0; layer < tileMap.totalLayers(); layer++)
+                  selectionTiles[ii + jj*wSel][layer]^= 2;
+            // flip selection
+            for (int ii = 0; ii < wSel; ii++)
+              for (int jj = 0; jj < hSel/2; jj++){
+                int[] tmp = selectionTiles[ii + jj*wSel];
+                selectionTiles[ii + jj*wSel] = 
+                     selectionTiles[ii + (hSel-1 - jj)*wSel];
+                selectionTiles[ii + (hSel-1 - jj)*wSel] = tmp;
+              }
           }
         }
         @Override public void keyReleased(KeyEvent e){
@@ -845,13 +838,16 @@ public class MapEditor extends JPanel{
           if (lmbDown){
             hist.setTopMap(tileMap.currentTopMapIndex());
             hist.startGroup();
-            if (layersPanel.selectAllBox.isSelected()){
+            if (layersPanel.selectAllVisibleBox.isSelected()){
               for (int jj = 0; jj < hSel; jj++)
                 for (int ii = 0; ii < wSel; ii++){
                   int[] oldLayer = tileMap.get(iSel+ii, jSel+jj),
-                        newLayer = selectionTiles[ii + jj*wSel];
+                        selLayer = selectionTiles[ii + jj*wSel],
+                        newLayer = oldLayer.clone();
                   for (int iLayer=0; iLayer < tileMap.totalLayers(); iLayer++){
-                    if (oldLayer[iLayer] != newLayer[iLayer]){
+                    if (layersPanel.visibleLayerBox[iLayer].isSelected() &&
+                        (oldLayer[iLayer] != selLayer[iLayer])){
+                      newLayer[iLayer] = selLayer[iLayer];
                       hist.add(oldLayer[iLayer], newLayer[iLayer], 
                                iLayer, iSel+ii, jSel+jj);
                     }
@@ -904,12 +900,13 @@ public class MapEditor extends JPanel{
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
                                                     (float)main.pulse/256));
         if (!rmbDown){
-          if (layersPanel.selectAllBox.isSelected()){
+          if (layersPanel.selectAllVisibleBox.isSelected()){
             for (int jj = 0; jj < hSel; jj++)
               for (int ii = 0; ii < wSel; ii++)
                 for (int iLayer = 0; iLayer < tileMap.totalLayers(); iLayer++)
-                  tileMap.drawTile(g, selectionTiles[ii + jj*wSel][iLayer], 
-                    xi0 + (iSel+ii-i0)*tw, yj0 + (jSel+jj-j0)*th, tw, th);
+                  if (layersPanel.visibleLayerBox[iLayer].isSelected())
+                    tileMap.drawTile(g, selectionTiles[ii + jj*wSel][iLayer], 
+                      xi0 + (iSel+ii-i0)*tw, yj0 + (jSel+jj-j0)*th, tw, th);
           }else{
             for (int jj = 0; jj < hSel; jj++)
               for (int ii = 0; ii < wSel; ii++)
