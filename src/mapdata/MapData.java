@@ -492,7 +492,10 @@ public class MapData{
         return currentEntry;
       }
     
-      @Override public void remove(){}  // not used
+      @Override public void remove(){
+        Map2dSet.this.remove(currentEntry);
+        visited--;
+      }
     }
 
     public void testBucketSizes(){
