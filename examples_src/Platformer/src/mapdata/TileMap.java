@@ -50,6 +50,11 @@ public class TileMap extends MapData{
     firstLayer = first; lastLayer = last;
   }
   
+  // faster than Math.floor and returns integer
+  public static final int floor(double x){
+    return ( (x < 0) && (x != (int)x) ) ? (int)x - 1 : (int)x;
+  }
+  
   // In pixel units, draw the map range:(mapX, mapY, mapW, mapH) to
   // Graphics g:(dstX, dstY) using layers: firstLayer to lastLayer
   // (draws whole tiles which may extend beyond the destination bounds)
@@ -57,8 +62,7 @@ public class TileMap extends MapData{
                       Graphics g, int dstX, int dstY){
     if (firstLayer < 0) firstLayer = 0;
     if (lastLayer > nLayers-1) lastLayer = nLayers-1;
-    int i0 = (mapX < 0) ? (mapX+1)/tileW - 1 : mapX/tileW,
-        j0 = (mapY < 0) ? (mapY+1)/tileH - 1 : mapY/tileH;
+    int i0 = floor(mapX/tileW), j0 = floor(mapY/tileH);
     for (int j = j0; j*tileH < mapY+mapH; j++){
       int y = dstY + j*tileH-mapY;
       for (int i = i0; i*tileW < mapX+mapW; i++){
@@ -78,8 +82,7 @@ public class TileMap extends MapData{
     if ((mapW == 0) || (mapH == 0)) return;
     if (firstLayer < 0) firstLayer = 0;
     if (lastLayer > nLayers-1) lastLayer = nLayers-1;
-    int i0 = (mapX < 0) ? (mapX+1)/tileW - 1 : mapX/tileW,
-        j0 = (mapY < 0) ? (mapY+1)/tileH - 1 : mapY/tileH;
+    int i0 = floor(mapX/tileW), j0 = floor(mapY/tileH);
     for (int j = j0; j*tileH < mapY+mapH; j++){
       int y = dstY + (j*tileH - mapY)*dstH/mapH, 
           h = dstY + ((j+1)*tileH - mapY)*dstH/mapH - y;
@@ -310,7 +313,7 @@ public class TileMap extends MapData{
   
   // return true if map at point x,y is solid
   public boolean collisionAt(double x, double y){
-    int i = xToI(x*4/tileW), j = xToI(y*4/tileH), ii = i&3, jj = j&3;
+    int i = floor(x*4/tileW), j = floor(y*4/tileH), ii = i&3, jj = j&3;
     int[] layer = get(i>>2, j>>2);
     for (int ID : layer)
       if (isSolid(ID, ii, jj)) return true;
@@ -319,8 +322,8 @@ public class TileMap extends MapData{
     
   // return true if any part of the map within (x, y, w, h) is solid
   public boolean collisionAt(double x, double y, double w, double h){
-    int i1 = xToI(x*4/tileW), i2 = xToI((x+w)*4/tileW),
-        j1 = xToI(y*4/tileH), j2 = xToI((y+h)*4/tileH);
+    int i1 = floor(x*4/tileW), i2 = floor((x+w)*4/tileW),
+        j1 = floor(y*4/tileH), j2 = floor((y+h)*4/tileH);
     for (int j = j1>>2; j <= j2>>2; j++){
       int jj1 = (j*4 >= j1) ? 0 : j1-j*4, jj2 = (j2-j*4 >= 3) ? 4 : j2-j*4+1;
       for (int i = i1>>2; i <= i2>>2; i++){
@@ -332,8 +335,6 @@ public class TileMap extends MapData{
     }
     return false;
   }
-  
-  static final int xToI(double x){ return (x < 0) ? (int)x - 1 : (int)x; }
   
   // tile solid methods for collision detection ////////////////////////////////
   // short solid bits represents a 4x4 solid grid, for each bit 1=solid
