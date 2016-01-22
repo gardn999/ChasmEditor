@@ -293,7 +293,7 @@ public class TileEditor extends JPanel{
       add(timeLabel);
       
       NumberFormatter timeFormat = new NumberFormatter();
-      timeFormat.setMinimum(new Integer(1));
+      timeFormat.setMinimum(1);
       timeText = new JFormattedTextField(timeFormat);
       timeText.setValue(500);
       timeText.setMaximumSize(new Dimension(80, 30));
@@ -307,8 +307,8 @@ public class TileEditor extends JPanel{
       add(alphaLabel);
       
       NumberFormatter alphaFormat = new NumberFormatter();
-      alphaFormat.setMinimum(new Float(0f));
-      alphaFormat.setMaximum(new Float(1f));
+      alphaFormat.setMinimum(0f);
+      alphaFormat.setMaximum(1f);
       alphaText = new JFormattedTextField(alphaFormat);
       alphaText.setValue(1f);
       alphaText.setMaximumSize(new Dimension(80, 30));

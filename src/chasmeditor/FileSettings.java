@@ -244,7 +244,7 @@ public class FileSettings extends JPanel{
     if (nLayers >= main.MAX_LAYERS) return;
     setLayerFieldBounds();
     int n = ((Number)layerField.getValue()).intValue();
-    main.tileMap.addLayer();
+    main.tileMap.insertLayer(n);
     if (main.tileMap.totalLayers() != nLayers){ 
       layerField.setValue(n+1);
       changed = true;
